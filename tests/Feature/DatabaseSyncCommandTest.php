@@ -1,10 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
-use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
+use Illuminate\Support\Facades\Storage;
+
+beforeEach(function () {
+    Storage::fake('local');
+});
 
 test('database sync command can be executed', function () {
     $this->artisan('db-sync')
+        ->expectsChoice(
+            'From where do you want to sync test_database?',
+            'today',
+            ['today' => 'Today', 'yesterday' => 'Yesterday', 'custom' => 'Custom date']
+        )
         ->assertExitCode(0);
 });
 
@@ -46,5 +54,10 @@ test('database sync command respects ignored tables', function () {
     ]]);
 
     $this->artisan('db-sync')
+        ->expectsChoice(
+            'From where do you want to sync test_database?',
+            'today',
+            ['today' => 'Today', 'yesterday' => 'Yesterday', 'custom' => 'Custom date']
+        )
         ->assertExitCode(0);
 });
