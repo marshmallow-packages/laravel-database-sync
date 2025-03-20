@@ -1,0 +1,59 @@
+{
+    "name": "marshmallow/laravel-database-sync",
+    "description": "Sync your production database in to your local database to start developing with production data",
+    "keywords": [
+        "marshmallow",
+        "Laravel"
+    ],
+    "homepage": "https://github.com/marshmallow-packages/laravel-database-sync",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stef",
+            "email": "stef@marshmallow.dev",
+            "homepage": "https://marshmallow.dev",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "stef@marshmallow.dev"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^10.0|^11.0|^12.0",
+        "laravel/helpers": "^1.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "orchestra/testbench": "^8.0|^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Marshmallow\\LaravelDatabaseSync\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Marshmallow\\LaravelDatabaseSync\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Marshmallow\\LaravelDatabaseSync\\LaravelDatabaseSyncServiceProvider"
+            ]
+        }
+    }
+}
