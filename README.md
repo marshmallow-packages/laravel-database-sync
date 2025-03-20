@@ -4,7 +4,7 @@ A powerful Laravel package that enables seamless synchronization of data from a 
 
 ## Requirements
 
--   PHP ^8.0
+-   PHP ^8.2
 -   Laravel ^10.0|^11.0|^12.0
 
 ## Installation
@@ -12,7 +12,7 @@ A powerful Laravel package that enables seamless synchronization of data from a 
 You can install the package via composer:
 
 ```bash
-composer require marshmallow/laravel-database-sync
+composer require marshmallow/laravel-database-sync --dev
 ```
 
 ## Configuration
@@ -162,16 +162,17 @@ composer test-coverage
 
 The test suite includes:
 
-- **Unit Tests**: Testing individual components
-  - `Config` class tests
-  - `DatabaseSync` class tests
-  - Other utility classes
+-   **Unit Tests**: Testing individual components
 
-- **Feature Tests**: Testing the package functionality
-  - Command execution tests
-  - Multi-tenant functionality
-  - Suite configurations
-  - Table filtering
+    -   `Config` class tests
+    -   `DatabaseSync` class tests
+    -   Other utility classes
+
+-   **Feature Tests**: Testing the package functionality
+    -   Command execution tests
+    -   Multi-tenant functionality
+    -   Suite configurations
+    -   Table filtering
 
 ### Writing Tests
 
