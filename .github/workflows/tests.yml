@@ -1,19 +1,22 @@
-name: Tests
+name: run-tests
 
 on:
     push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+        paths:
+            - "**.php"
+            - ".github/workflows/tests.yml"
+            - "phpunit.xml.dist"
+            - "composer.json"
+            - "composer.lock"
 
 jobs:
-    tests:
-        runs-on: ubuntu-latest
-
+    test:
+        runs-on: ${{ matrix.os }}
+        timeout-minutes: 5
         strategy:
+            fail-fast: true
             matrix:
+                os: [ubuntu-latest, windows-latest]
                 php: [8.4, 8.3]
                 laravel: [12.*, 11.*, 10.*]
                 stability: [prefer-lowest, prefer-stable]
@@ -25,23 +28,31 @@ jobs:
                     - laravel: 10.*
                       testbench: 8.*
 
-        name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+        name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+                  extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
                   coverage: none
 
-            - name: Install Composer dependencies
+            - name: Setup problem matchers
               run: |
-                  composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-                  composer update --prefer-dist --no-interaction
+                  echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+                  echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            - name: Install dependencies
+              run: |
+                  composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+                  composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+            - name: List Installed Dependencies
+              run: composer show -D
 
             - name: Execute tests
-              run: vendor/bin/pest
+              run: vendor/bin/pest --ci
