@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 test('database sync can be initialized with config', function () {
     $config = Config::make(
-        remote_host: 'test-remote-host',
+        remote_user_and_host: 'test-remote-host@1.1.1.1',
         remote_database: 'test-remote-db',
         remote_database_username: 'test-user',
         remote_database_password: 'test-password',
@@ -22,7 +22,7 @@ test('database sync can be initialized with config', function () {
     $command = new DatabaseSyncCommand();
     $input = new ArrayInput(['--date' => null], $command->getDefinition());
     $output = new OutputStyle($input, new BufferedOutput());
-    
+
     $command->setInput($input);
     $command->setOutput($output);
 
@@ -32,7 +32,7 @@ test('database sync can be initialized with config', function () {
 
 test('database sync can set and get database', function () {
     $config = Config::make(
-        remote_host: 'test-remote-host',
+        remote_user_and_host: 'test-remote-host@1.1.1.1',
         remote_database: 'test-remote-db',
         remote_database_username: 'test-user',
         remote_database_password: 'test-password',
@@ -45,7 +45,7 @@ test('database sync can set and get database', function () {
     $command = new DatabaseSyncCommand();
     $input = new ArrayInput(['--date' => null], $command->getDefinition());
     $output = new OutputStyle($input, new BufferedOutput());
-    
+
     $command->setInput($input);
     $command->setOutput($output);
 
@@ -57,7 +57,7 @@ test('database sync can set and get database', function () {
 
 test('database sync can handle multi-tenant database type', function () {
     $config = Config::make(
-        remote_host: 'test-remote-host',
+        remote_user_and_host: 'test-remote-host@1.1.1.1',
         remote_database: 'test-remote-db',
         remote_database_username: 'test-user',
         remote_database_password: 'test-password',
@@ -70,7 +70,7 @@ test('database sync can handle multi-tenant database type', function () {
     $command = new DatabaseSyncCommand();
     $input = new ArrayInput(['--date' => null], $command->getDefinition());
     $output = new OutputStyle($input, new BufferedOutput());
-    
+
     $command->setInput($input);
     $command->setOutput($output);
 

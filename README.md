@@ -28,7 +28,7 @@ php artisan vendor:publish --tag="database-sync-config"
 Add these variables to your `.env` file:
 
 ```env
-DATABASE_SYNC_REMOTE_HOST=
+DATABASE_SYNC_REMOTE_USER_AND_HOST="forge@1.1.1.1"
 DATABASE_SYNC_REMOTE_DATABASE_USERNAME=forge
 DATABASE_SYNC_REMOTE_DATABASE_PASSWORD=
 

@@ -17,7 +17,7 @@ class TestCase extends Orchestra
     protected function defineEnvironment($app)
     {
         // Set up test environment variables
-        $app['config']->set('database-sync.remote_host', 'test-remote-host');
+        $app['config']->set('database-sync.remote_user_and_host', 'test-remote-host@1.1.1.1');
         $app['config']->set('database-sync.remote_database', 'test-remote-db');
         $app['config']->set('database-sync.remote_database_username', 'test-user');
         $app['config']->set('database-sync.remote_database_password', 'test-password');

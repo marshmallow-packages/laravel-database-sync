@@ -24,7 +24,7 @@ class Config
     }
 
     protected function __construct(
-        public string $remote_host,
+        public string $remote_user_and_host,
         public string $remote_database,
         public string $remote_database_username,
         public string $remote_database_password,
@@ -45,7 +45,7 @@ class Config
 
     protected function validateParameters(): void
     {
-        if (empty($this->remote_host)) {
+        if (empty($this->remote_user_and_host)) {
             throw new InvalidArgumentException(__('Remote host cannot be empty'));
         }
 

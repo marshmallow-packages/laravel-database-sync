@@ -18,7 +18,7 @@ class CopyRemoteFileToLocalAction
         if ($command->isDebug()) {
             $command->info(__('Copying file to local machine...'));
         }
-        $copyCommand = "scp {$config->remote_host}:{$config->remote_temporary_file} {$config->local_temporary_file}";
+        $copyCommand = "scp {$config->remote_user_and_host}:{$config->remote_temporary_file} {$config->local_temporary_file}";
         Process::run($copyCommand);
     }
 }
