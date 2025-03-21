@@ -14,7 +14,7 @@ return [
     */
 
     'remote_host' => env('DATABASE_SYNC_REMOTE_HOST'),
-    'remote_database' => env('DATABASE_SYNC_REMOTE_DATABASE'),
+    'remote_database' => env('DATABASE_SYNC_REMOTE_DATABASE', env('DB_DATABASE')),
     'remote_database_username' => env('DATABASE_SYNC_REMOTE_DATABASE_USERNAME'),
     'remote_database_password' => env('DATABASE_SYNC_REMOTE_DATABASE_PASSWORD'),
 
