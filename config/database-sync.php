@@ -29,10 +29,10 @@ return [
     |
     */
 
-    'local_host' => env('DATABASE_SYNC_LOCAL_HOST', '127.0.0.1'),
-    'local_database' => env('DATABASE_SYNC_LOCAL_DATABASE'),
-    'local_database_username' => env('DATABASE_SYNC_LOCAL_DATABASE_USERNAME', 'root'),
-    'local_database_password' => env('DATABASE_SYNC_LOCAL_DATABASE_PASSWORD', 'secret'),
+    'local_host' => env('DATABASE_SYNC_LOCAL_HOST', env('DB_HOST', '127.0.0.1')),
+    'local_database' => env('DATABASE_SYNC_LOCAL_DATABASE', env('DB_DATABASE')),
+    'local_database_username' => env('DATABASE_SYNC_LOCAL_DATABASE_USERNAME', env('DB_USERNAME', 'root')),
+    'local_database_password' => env('DATABASE_SYNC_LOCAL_DATABASE_PASSWORD', env('DB_PASSWORD', 'secret')),
 
     /*
     |--------------------------------------------------------------------------
