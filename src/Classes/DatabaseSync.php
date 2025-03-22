@@ -13,6 +13,8 @@ use Marshmallow\LaravelDatabaseSync\Actions\Mysql\HasDeletedAtColumn;
 use Marshmallow\LaravelDatabaseSync\Exceptions\OutputWarningException;
 use Marshmallow\LaravelDatabaseSync\Actions\CopyRemoteFileToLocalAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpDeletedDataAction;
+use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpFullTableDataAction;
+use Marshmallow\LaravelDatabaseSync\Actions\Mysql\CollectStamplessTablesAction;
 use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateValueToStorageAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpCreatedOrUpdatedDataAction;
 
@@ -26,21 +28,27 @@ class DatabaseSync
     public function sync(): self
     {
         $this->command->line(__("Sync :remote_database", ['remote_database' => $this->config->remote_database]));
-        $this->command->line(__("Fetching tables with created_at or updated_at columns after :date...", [
-            'date' => $this->config->date->format('Y-m-d'),
-        ]));
 
         /**
          * Get the list of tables that contain created_at or updated_at
          */
-        CollectTableAction::handle($this->config, $this->command)
-            ->each(function ($table) {
+        $stamped_tables = CollectTableAction::handle($this->config, $this->command);
+        if ($stamped_tables->count()) {
+            $stamped_tables->each(function ($table) {
                 try {
                     $this->syncTable($table);
                 } catch (OutputWarningException $e) {
                     $this->command->warn($e->getMessage());
                 }
             });
+        }
+
+        /** Start syncing the stampless tables, if they are provided in the config. */
+        $stampless_tables = CollectStamplessTablesAction::handle($this->config, $this->command);
+        if (count($stampless_tables)) {
+            $this->command->line(__("We will no start syncing all tables that dont have timestamp columns."));
+            $stampless_tables->each(fn($table) => $this->syncFullTable($table));
+        }
 
         LogLastSyncDateValueToStorageAction::handle($this->config);
         $this->command->line(__('Database sync complete! 🚀'));
@@ -56,6 +64,23 @@ class DatabaseSync
         CountRecordsAction::handle($table, $deleted_at_available, $this->config, $this->command);
         DumpCreatedOrUpdatedDataAction::handle($table, $this->config, $this->command);
         DumpDeletedDataAction::handle($table, $deleted_at_available, $this->config, $this->command);
+        CopyRemoteFileToLocalAction::handle($this->config, $this->command);
+        ImportDataAction::handle($this->config, $this->command);
+        RemoveRemoteFileAction::handle($this->config);
+        RemoveLocalFileAction::handle($this->config);
+
+        if ($this->command->isDebug()) {
+            $this->command->newLine();
+        }
+    }
+
+    protected function syncFullTable(string $table)
+    {
+        $this->command->info(__(":table: syncing all records", [
+            'table' => $table,
+        ]));
+
+        DumpFullTableDataAction::handle($table, $this->config, $this->command);
         CopyRemoteFileToLocalAction::handle($this->config, $this->command);
         ImportDataAction::handle($this->config, $this->command);
         RemoveRemoteFileAction::handle($this->config);

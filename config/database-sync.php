@@ -63,10 +63,17 @@ return [
 
     'tables' => [
         'ignore' => [
-            'action_events',
             'jobs',
-            'telescope_entries',
+            'migrations',
+            'failed_jobs',
+            'action_events',
             'password_resets',
+            'telescope_entries',
+
+            /** Ignore the Pulse tables */
+            'pulse_values',
+            'pulse_entries',
+            'pulse_aggregates',
         ],
     ],
 

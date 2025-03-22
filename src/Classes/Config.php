@@ -69,4 +69,14 @@ class Config
             throw new InvalidArgumentException(__('Local database username cannot be empty'));
         }
     }
+
+    public function isLandlordDatabase(): bool
+    {
+        return $this->multi_tenant_database_type === 'landlord';
+    }
+
+    public function isTenantDatabase(): bool
+    {
+        return $this->multi_tenant_database_type === 'tenant';
+    }
 }
