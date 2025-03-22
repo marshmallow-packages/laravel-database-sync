@@ -11,15 +11,22 @@ class CountRecordsAction
 {
     public static function handle(
         string $table,
+        bool $deleted_at_available,
         Config $config,
         DatabaseSyncCommand $command,
     ): void {
-        $countCommand = "ssh {$config->remote_user_and_host} \"mysql -u {$config->remote_database_username} -p{$config->remote_database_password} -D {$config->remote_database} -N -B -e 'SELECT COUNT(*) FROM {$table} WHERE created_at >= \\\"{$config->date} 00:00:00\\\" OR updated_at >= \\\"{$config->date} 00:00:00\\\";'\"";
+        $whereClause = "(created_at >= \\\"{$config->date}\\\" OR updated_at >= \\\"{$config->date}\\\"";
+        if ($deleted_at_available) {
+            $whereClause .= " OR deleted_at >= \\\"{$config->date}\\\"";
+        }
+        $whereClause .= ")";
+
+        $countCommand = "ssh {$config->remote_user_and_host} \"mysql -u {$config->remote_database_username} -p{$config->remote_database_password} -D {$config->remote_database} -N -B -e 'SELECT COUNT(*) FROM {$table} WHERE {$whereClause};'\"";
 
         $count = Process::run($countCommand)->output();
         $count = trim($count);
-
         $count = intval($count);
+
         if ($count === 0) {
             throw new OutputWarningException(__(":table: no new, updated or deleted records found", [
                 'table' => $table,
