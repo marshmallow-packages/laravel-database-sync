@@ -4,22 +4,22 @@ A powerful Laravel package that enables seamless synchronization of data from a 
 
 ## Table of Contents
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-  - [Environment Variables](#environment-variables)
-- [Usage](#usage)
-  - [Basic Synchronization](#basic-synchronization)
-  - [Advanced Options](#advanced-options)
-  - [Table Configuration](#table-configuration)
-  - [Synchronization Suites](#synchronization-suites)
-  - [Multi-Tenant Support](#multi-tenant-support)
-- [Testing](#testing)
-  - [Test Structure](#test-structure)
-  - [Writing Tests](#writing-tests)
-- [Security](#security)
-- [Support](#support)
-- [License](#license)
+-   [Requirements](#requirements)
+-   [Installation](#installation)
+-   [Configuration](#configuration)
+    -   [Environment Variables](#environment-variables)
+-   [Usage](#usage)
+    -   [Basic Synchronization](#basic-synchronization)
+    -   [Advanced Options](#advanced-options)
+    -   [Table Configuration](#table-configuration)
+    -   [Synchronization Suites](#synchronization-suites)
+    -   [Multi-Tenant Support](#multi-tenant-support)
+-   [Testing](#testing)
+    -   [Test Structure](#test-structure)
+    -   [Writing Tests](#writing-tests)
+-   [Security](#security)
+-   [Support](#support)
+-   [License](#license)
 
 ## Requirements
 
@@ -46,7 +46,7 @@ php artisan vendor:publish --tag="database-sync-config"
 
 Add these variables to your `.env` file:
 
-```env
+````env
 DATABASE_SYNC_REMOTE_USER_AND_HOST="forge@1.1.1.1"
 DATABASE_SYNC_REMOTE_DATABASE_USERNAME=forge
 DATABASE_SYNC_REMOTE_DATABASE_PASSWORD=
@@ -64,7 +64,7 @@ To sync your remote database to local:
 
 ```bash
 php artisan db-sync
-```
+````
 
 ### Advanced Options
 
@@ -81,6 +81,7 @@ Available options:
 -   `--table`: Sync a specific table
 -   `--tenant`: Specify tenant for multi-tenant applications
 -   `--skip-landlord`: Skip landlord database in multi-tenant setup
+-   `--full-sync`: Sync the full table without a date constraint
 
 ### Table Configuration
 
