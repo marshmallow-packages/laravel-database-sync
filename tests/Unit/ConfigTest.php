@@ -1,11 +1,10 @@
 <?php
 
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
-use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
 
 test('config can be created with valid parameters', function () {
     $config = Config::make(
-        remote_host: 'test-remote-host',
+        remote_user_and_host: 'test-remote-host@1.1.1.1',
         remote_database: 'test-remote-db',
         remote_database_username: 'test-user',
         remote_database_password: 'test-password',
@@ -16,7 +15,7 @@ test('config can be created with valid parameters', function () {
     );
 
     expect($config)->toBeInstanceOf(Config::class)
-        ->and($config->remote_host)->toBe('test-remote-host')
+        ->and($config->remote_user_and_host)->toBe('test-remote-host@1.1.1.1')
         ->and($config->remote_database)->toBe('test-remote-db')
         ->and($config->local_host)->toBe('127.0.0.1')
         ->and($config->local_database)->toBe('test-local-db');
@@ -24,7 +23,7 @@ test('config can be created with valid parameters', function () {
 
 test('config validates required parameters', function () {
     expect(fn() => Config::make(
-        remote_host: '',  // Empty host should throw exception
+        remote_user_and_host: '',  // Empty host should throw exception
         remote_database: 'test-remote-db',
         remote_database_username: 'test-user',
         remote_database_password: 'test-password',

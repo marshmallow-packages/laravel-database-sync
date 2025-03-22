@@ -18,7 +18,7 @@ class DumpDataAction
         /**
          * Run all dump commands and save to a new .sql file
          */
-        $exportCommand = "ssh {$config->remote_host} \"" . $dumpCommand . " >> {$config->remote_temporary_file}\"";
+        $exportCommand = "ssh {$config->remote_user_and_host} \"" . $dumpCommand . " >> {$config->remote_temporary_file}\"";
         if ($command->isDebug()) {
             $command->info(__("Exporting new or updated records for :table...", [
                 'table' => $table,

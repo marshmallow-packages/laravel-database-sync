@@ -14,7 +14,7 @@ class CountRecordsAction
         Config $config,
         DatabaseSyncCommand $command,
     ): void {
-        $countCommand = "ssh {$config->remote_host} \"mysql -u {$config->remote_database_username} -p{$config->remote_database_password} -D {$config->remote_database} -N -B -e 'SELECT COUNT(*) FROM {$table} WHERE created_at >= \\\"{$config->date} 00:00:00\\\" OR updated_at >= \\\"{$config->date} 00:00:00\\\";'\"";
+        $countCommand = "ssh {$config->remote_user_and_host} \"mysql -u {$config->remote_database_username} -p{$config->remote_database_password} -D {$config->remote_database} -N -B -e 'SELECT COUNT(*) FROM {$table} WHERE created_at >= \\\"{$config->date} 00:00:00\\\" OR updated_at >= \\\"{$config->date} 00:00:00\\\";'\"";
 
         $count = Process::run($countCommand)->output();
         $count = trim($count);

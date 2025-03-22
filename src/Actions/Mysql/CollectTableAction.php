@@ -19,7 +19,7 @@ class CollectTableAction
         DatabaseSyncCommand $command,
     ): Collection {
 
-        $getTablesCommand = "ssh {$config->remote_host} \"mysql -u {$config->remote_database_username} -p{$config->remote_database_password} -D {$config->remote_database} -N -B -e \\\"SELECT table_name FROM information_schema.columns WHERE table_schema='{$config->remote_database}' AND column_name IN ('created_at', 'updated_at') GROUP BY table_name;\\\"\"";
+        $getTablesCommand = "ssh {$config->remote_user_and_host} \"mysql -u {$config->remote_database_username} -p{$config->remote_database_password} -D {$config->remote_database} -N -B -e \\\"SELECT table_name FROM information_schema.columns WHERE table_schema='{$config->remote_database}' AND column_name IN ('created_at', 'updated_at') GROUP BY table_name;\\\"\"";
 
         $tables = Process::run($getTablesCommand)->output();
         $tables = explode("\n", trim($tables));
