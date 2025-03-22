@@ -3,16 +3,18 @@
 namespace Marshmallow\LaravelDatabaseSync\Classes;
 
 use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
-use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpDataAction;
 use Marshmallow\LaravelDatabaseSync\Actions\GetLastSyncDateAction;
 use Marshmallow\LaravelDatabaseSync\Actions\RemoveLocalFileAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\ImportDataAction;
 use Marshmallow\LaravelDatabaseSync\Actions\RemoveRemoteFileAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\CollectTableAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\CountRecordsAction;
+use Marshmallow\LaravelDatabaseSync\Actions\Mysql\HasDeletedAtColumn;
 use Marshmallow\LaravelDatabaseSync\Exceptions\OutputWarningException;
 use Marshmallow\LaravelDatabaseSync\Actions\CopyRemoteFileToLocalAction;
+use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpDeletedDataAction;
 use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateValueToStorageAction;
+use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpCreatedOrUpdatedDataAction;
 
 class DatabaseSync
 {
@@ -49,8 +51,11 @@ class DatabaseSync
 
     protected function syncTable(string $table)
     {
-        CountRecordsAction::handle($table, $this->config, $this->command);
-        DumpDataAction::handle($table, $this->config, $this->command);
+        $deleted_at_available = HasDeletedAtColumn::handle($table, $this->config);
+
+        CountRecordsAction::handle($table, $deleted_at_available, $this->config, $this->command);
+        DumpCreatedOrUpdatedDataAction::handle($table, $this->config, $this->command);
+        DumpDeletedDataAction::handle($table, $deleted_at_available, $this->config, $this->command);
         CopyRemoteFileToLocalAction::handle($this->config, $this->command);
         ImportDataAction::handle($this->config, $this->command);
         RemoveRemoteFileAction::handle($this->config);
