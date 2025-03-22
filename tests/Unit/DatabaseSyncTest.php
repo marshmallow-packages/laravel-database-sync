@@ -20,9 +20,9 @@ test('database sync can be initialized with config', function () {
     );
 
     $command = new DatabaseSyncCommand();
-    $input = new ArrayInput(['--date' => null], $command->getDefinition());
+    $input = new ArrayInput(['--date' => now()->format('Y-m-d')], $command->getDefinition());
     $output = new OutputStyle($input, new BufferedOutput());
-    
+
     $command->setInput($input);
     $command->setOutput($output);
 
@@ -43,9 +43,9 @@ test('database sync can set and get database', function () {
     );
 
     $command = new DatabaseSyncCommand();
-    $input = new ArrayInput(['--date' => null], $command->getDefinition());
+    $input = new ArrayInput(['--date' => now()->format('Y-m-d')], $command->getDefinition());
     $output = new OutputStyle($input, new BufferedOutput());
-    
+
     $command->setInput($input);
     $command->setOutput($output);
 
@@ -68,9 +68,9 @@ test('database sync can handle multi-tenant database type', function () {
     );
 
     $command = new DatabaseSyncCommand();
-    $input = new ArrayInput(['--date' => null], $command->getDefinition());
+    $input = new ArrayInput(['--date' => now()->format('Y-m-d')], $command->getDefinition());
     $output = new OutputStyle($input, new BufferedOutput());
-    
+
     $command->setInput($input);
     $command->setOutput($output);
 
