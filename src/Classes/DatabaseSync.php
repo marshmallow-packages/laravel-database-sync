@@ -36,7 +36,9 @@ class DatabaseSync
         if ($stamped_tables->count()) {
             $stamped_tables->each(function ($table) {
                 try {
-                    $this->syncTable($table);
+                    $this->command->option('full-sync')
+                        ? $this->syncFullTable($table)
+                        : $this->syncTable($table);
                 } catch (OutputWarningException $e) {
                     $this->command->warn($e->getMessage());
                 }

@@ -11,7 +11,7 @@ use Marshmallow\LaravelDatabaseSync\Filters\FilterTenantOption;
 
 class DatabaseSyncCommand extends Command
 {
-    protected $signature = 'db-sync {--date=} {--suite=} {--table=} {--tenant=} {--skip-landlord}';
+    protected $signature = 'db-sync {--date=} {--suite=} {--table=} {--tenant=} {--skip-landlord} {--full-sync}';
 
     protected $description = 'Sync new and updated records from Laravel Forge to local';
 
