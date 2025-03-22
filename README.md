@@ -2,6 +2,25 @@
 
 A powerful Laravel package that enables seamless synchronization of data from a remote database to your local development environment.
 
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Environment Variables](#environment-variables)
+- [Usage](#usage)
+  - [Basic Synchronization](#basic-synchronization)
+  - [Advanced Options](#advanced-options)
+  - [Table Configuration](#table-configuration)
+  - [Synchronization Suites](#synchronization-suites)
+  - [Multi-Tenant Support](#multi-tenant-support)
+- [Testing](#testing)
+  - [Test Structure](#test-structure)
+  - [Writing Tests](#writing-tests)
+- [Security](#security)
+- [Support](#support)
+- [License](#license)
+
 ## Requirements
 
 -   PHP ^8.2
@@ -34,7 +53,8 @@ DATABASE_SYNC_REMOTE_DATABASE_PASSWORD=
 
 DATABASE_SYNC_TEMPORARY_FILE_LOCATION_REMOTE=~/new_data.sql
 DATABASE_SYNC_TEMPORARY_FILE_LOCATION_LOCAL=~/Downloads/new_data.sql
-```
+
+> **Important**: When connecting to a Forge-provisioned database server, you must use the main database user that was created during the initial server provisioning. Other database users created afterward may not have the necessary privileges to execute the required database commands for synchronization.
 
 ## Usage
 
