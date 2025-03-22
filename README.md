@@ -46,13 +46,14 @@ php artisan vendor:publish --tag="database-sync-config"
 
 Add these variables to your `.env` file:
 
-````env
+```env
 DATABASE_SYNC_REMOTE_USER_AND_HOST="forge@1.1.1.1"
 DATABASE_SYNC_REMOTE_DATABASE_USERNAME=forge
 DATABASE_SYNC_REMOTE_DATABASE_PASSWORD=
 
 DATABASE_SYNC_TEMPORARY_FILE_LOCATION_REMOTE=~/new_data.sql
 DATABASE_SYNC_TEMPORARY_FILE_LOCATION_LOCAL=~/Downloads/new_data.sql
+```
 
 > **Important**: When connecting to a Forge-provisioned database server, you must use the main database user that was created during the initial server provisioning. Other database users created afterward may not have the necessary privileges to execute the required database commands for synchronization.
 
