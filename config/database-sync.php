@@ -95,4 +95,8 @@ return [
     */
 
     'multi_tenant' => false,
+
+    'mysql' => [
+        'dump_action_flags' => '--skip-lock-tables --no-create-info --complete-insert --skip-triggers --replace',
+    ],
 ];
