@@ -17,6 +17,7 @@ class Config
     public string $local_temporary_file;
     public string $cache_file_path;
     public string $cache_file_disk;
+    public ?Carbon $sync_start_time = null;
 
     public static function make(...$arguments): static
     {

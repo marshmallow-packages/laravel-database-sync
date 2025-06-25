@@ -16,16 +16,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `GetLastSyncDateForTableWithFallbackAction` for intelligent sync date resolution with fallback support
 -   `GetAllTableSyncDatesAction` for retrieving sync status of all tables
 -   Debug output showing which sync date is being used for each table
+-   **Sync timestamp management**: Sync start time is now captured at the beginning and only stored on successful completion
+-   `LogLastSyncDateForTableWithTimestampAction` for logging table sync dates with specific timestamps, `LogLastSyncDateForTableAction` is deleted because we dont use it anymore.
+-   `LogLastSyncDateValueToStorageWithTimestampAction` for logging global sync dates with specific timestamps, `LogLastSyncDateValueToStorageAction` is deleted because we dont use it anymore.
+-   Enhanced error handling for file copy and database import operations
 
 ### Changed
 
 -   Sync process now uses table-specific dates when available, with automatic fallback to global dates
 -   Improved sync status information showing the date being used for each table
 -   Enhanced command description to mention the new `--status` option
+-   **Breaking**: Sync dates are now recorded at sync start time, not completion time, preventing data loss during long-running syncs
+-   Sync process now has comprehensive error handling with rollback capability
 
 ### Fixed
 
 -   Typo in sync message: "We will no start" → "We will now start"
+-   **Critical**: Fixed potential data loss issue where data created during sync could be missed due to timestamps being recorded at completion rather than start
 
 ## [1.0.0] - 2025-03-21
 

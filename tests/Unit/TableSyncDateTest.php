@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Storage;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
-use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateForTableAction;
 use Marshmallow\LaravelDatabaseSync\Actions\GetLastSyncDateForTableAction;
+use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateForTableWithTimestampAction;
 
 beforeEach(function () {
     Storage::fake('local');
@@ -24,7 +24,7 @@ test('can log and retrieve last sync date for specific table', function () {
     $table = 'users';
 
     // Log sync date for table
-    LogLastSyncDateForTableAction::handle($table, $config);
+    LogLastSyncDateForTableWithTimestampAction::handle($table, $config, now());
 
     // Retrieve sync date for table
     $syncDate = GetLastSyncDateForTableAction::handle($table, $config);
@@ -74,9 +74,9 @@ test('different tables can have different sync dates', function () {
     );
 
     // Log different sync dates for different tables
-    LogLastSyncDateForTableAction::handle('users', $config);
+    LogLastSyncDateForTableWithTimestampAction::handle('users', $config, now());
     sleep(1); // Ensure different timestamps
-    LogLastSyncDateForTableAction::handle('orders', $config);
+    LogLastSyncDateForTableWithTimestampAction::handle('orders', $config, now());
 
     $usersSyncDate = GetLastSyncDateForTableAction::handle('users', $config);
     $ordersSyncDate = GetLastSyncDateForTableAction::handle('orders', $config);
@@ -99,9 +99,9 @@ test('can get all table sync dates', function () {
     );
 
     // Log sync dates for multiple tables
-    LogLastSyncDateForTableAction::handle('users', $config);
-    LogLastSyncDateForTableAction::handle('orders', $config);
-    LogLastSyncDateForTableAction::handle('products', $config);
+    LogLastSyncDateForTableWithTimestampAction::handle('users', $config, now());
+    LogLastSyncDateForTableWithTimestampAction::handle('orders', $config, now());
+    LogLastSyncDateForTableWithTimestampAction::handle('products', $config, now());
 
     $allSyncDates = \Marshmallow\LaravelDatabaseSync\Actions\GetAllTableSyncDatesAction::handle($config);
 

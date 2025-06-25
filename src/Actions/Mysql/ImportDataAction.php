@@ -18,6 +18,10 @@ class ImportDataAction
         }
 
         $importCommand = "mysql -h {$config->local_host} -u {$config->local_database_username} -p'{$config->local_database_password}' {$config->local_database} < {$config->local_temporary_file}";
-        Process::run($importCommand);
+        $result = Process::run($importCommand);
+
+        if ($result->failed()) {
+            throw new \Exception(__('Failed to import data to local database: :error', ['error' => $result->errorOutput()]));
+        }
     }
 }
