@@ -11,6 +11,7 @@ A powerful Laravel package that enables seamless synchronization of data from a 
 -   [Usage](#usage)
     -   [Basic Synchronization](#basic-synchronization)
     -   [Advanced Options](#advanced-options)
+    -   [Per-Table Sync Tracking](#per-table-sync-tracking)
     -   [Table Configuration](#table-configuration)
     -   [Synchronization Suites](#synchronization-suites)
     -   [Multi-Tenant Support](#multi-tenant-support)
@@ -65,7 +66,7 @@ To sync your remote database to local:
 
 ```bash
 php artisan db-sync
-````
+```
 
 ### Advanced Options
 
@@ -83,6 +84,33 @@ Available options:
 -   `--tenant`: Specify tenant for multi-tenant applications
 -   `--skip-landlord`: Skip landlord database in multi-tenant setup
 -   `--full-sync`: Sync the full table without a date constraint
+-   `--status`: View the sync history and status for all tables
+
+### Per-Table Sync Tracking
+
+The package now tracks the last sync date for each individual table, preventing data loss when syncing single tables. This means:
+
+-   Each table maintains its own sync history
+-   When syncing a specific table with `--table`, only that table's sync date is considered
+-   The package automatically falls back to the global sync date for backward compatibility
+-   You can view the sync status of all tables using the `--status` option
+
+#### Viewing Sync Status
+
+To see the last sync date for all tables:
+
+```bash
+php artisan db-sync --status
+```
+
+This will display a table showing each table name and its last sync date, helping you track which tables have been synced recently and which might need attention.
+
+#### How It Works
+
+1. **Individual Table Tracking**: Each table's sync date is stored separately in the cache file
+2. **Automatic Fallback**: If no table-specific date exists, the global sync date is used
+3. **Backward Compatibility**: Existing installations continue to work without any changes
+4. **Debug Information**: When running with `-vvv` (debug mode), you'll see which sync date is being used for each table
 
 ### Table Configuration
 

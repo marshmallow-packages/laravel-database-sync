@@ -33,9 +33,10 @@ class CountRecordsAction
             ]));
         }
 
-        $command->info(__(":table: syncing :count records", [
+        $command->info(__(":table: syncing :count records (from :date)", [
             'table' => $table,
             'count' => $count,
+            'date' => $config->date->format('Y-m-d H:i:s'),
         ]));
     }
 }
