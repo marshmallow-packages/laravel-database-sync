@@ -15,9 +15,9 @@ use Marshmallow\LaravelDatabaseSync\Actions\CopyRemoteFileToLocalAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpDeletedDataAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpFullTableDataAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\CollectStamplessTablesAction;
-use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateValueToStorageAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpCreatedOrUpdatedDataAction;
-use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateForTableAction;
+use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateValueToStorageWithTimestampAction;
+use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateForTableWithTimestampAction;
 use Marshmallow\LaravelDatabaseSync\Actions\GetLastSyncDateForTableWithFallbackAction;
 
 class DatabaseSync
@@ -25,38 +25,47 @@ class DatabaseSync
     public function __construct(public Config $config, public DatabaseSyncCommand $command)
     {
         $config->date = GetLastSyncDateAction::handle($config, $command);
+        // Capture the sync start time to prevent missing data during sync
+        $config->sync_start_time = now();
     }
 
     public function sync(): self
     {
         $this->command->line(__("Sync :remote_database", ['remote_database' => $this->config->remote_database]));
 
-        /**
-         * Get the list of tables that contain created_at or updated_at
-         */
-        $stamped_tables = CollectTableAction::handle($this->config, $this->command);
-        if ($stamped_tables->count()) {
-            $stamped_tables->each(function ($table) {
-                try {
-                    $this->command->option('full-sync')
-                        ? $this->syncFullTable($table)
-                        : $this->syncTable($table);
-                } catch (OutputWarningException $e) {
-                    $this->command->warn($e->getMessage());
-                }
-            });
-        }
+        try {
+            /**
+             * Get the list of tables that contain created_at or updated_at
+             */
+            $stamped_tables = CollectTableAction::handle($this->config, $this->command);
+            if ($stamped_tables->count()) {
+                $stamped_tables->each(function ($table) {
+                    try {
+                        $this->command->option('full-sync')
+                            ? $this->syncFullTable($table)
+                            : $this->syncTable($table);
+                    } catch (OutputWarningException $e) {
+                        $this->command->warn($e->getMessage());
+                    }
+                });
+            }
 
-        /** Start syncing the stampless tables, if they are provided in the config. */
-        $stampless_tables = CollectStamplessTablesAction::handle($this->config, $this->command);
-        if (count($stampless_tables)) {
-            $this->command->line(__("We will now start syncing all tables that dont have timestamp columns."));
-            $stampless_tables->each(fn($table) => $this->syncFullTable($table));
-        }
+            /** Start syncing the stampless tables, if they are provided in the config. */
+            $stampless_tables = CollectStamplessTablesAction::handle($this->config, $this->command);
+            if (count($stampless_tables)) {
+                $this->command->line(__("We will now start syncing all tables that dont have timestamp columns."));
+                $stampless_tables->each(fn($table) => $this->syncFullTable($table));
+            }
 
-        LogLastSyncDateValueToStorageAction::handle($this->config);
-        $this->command->line(__('Database sync complete! 🚀'));
-        $this->command->newLine();
+            // Only update the sync date if everything succeeded
+            LogLastSyncDateValueToStorageWithTimestampAction::handle($this->config, $this->config->sync_start_time);
+            $this->command->line(__('Database sync complete! 🚀'));
+            $this->command->newLine();
+        } catch (\Exception $e) {
+            $this->command->error(__('Sync failed: :error', ['error' => $e->getMessage()]));
+            $this->command->warn(__('Sync date not updated due to failure. Please resolve the issue and try again.'));
+            throw $e;
+        }
 
         return $this;
     }
@@ -80,8 +89,8 @@ class DatabaseSync
         RemoveRemoteFileAction::handle($table_config);
         RemoveLocalFileAction::handle($table_config);
 
-        // Log the sync date for this specific table
-        LogLastSyncDateForTableAction::handle($table, $this->config);
+        // Log the sync date for this specific table using the sync start time
+        LogLastSyncDateForTableWithTimestampAction::handle($table, $this->config, $this->config->sync_start_time);
 
         if ($this->command->isDebug()) {
             $this->command->newLine();
@@ -100,8 +109,8 @@ class DatabaseSync
         RemoveRemoteFileAction::handle($this->config);
         RemoveLocalFileAction::handle($this->config);
 
-        // Log the sync date for this specific table
-        LogLastSyncDateForTableAction::handle($table, $this->config);
+        // Log the sync date for this specific table using the sync start time
+        LogLastSyncDateForTableWithTimestampAction::handle($table, $this->config, $this->config->sync_start_time);
 
         if ($this->command->isDebug()) {
             $this->command->newLine();

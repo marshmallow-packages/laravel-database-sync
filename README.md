@@ -94,6 +94,7 @@ The package now tracks the last sync date for each individual table, preventing 
 -   When syncing a specific table with `--table`, only that table's sync date is considered
 -   The package automatically falls back to the global sync date for backward compatibility
 -   You can view the sync status of all tables using the `--status` option
+-   **Sync timestamps are captured at the start of the process to prevent missing data created during sync**
 
 #### Viewing Sync Status
 
@@ -107,10 +108,13 @@ This will display a table showing each table name and its last sync date, helpin
 
 #### How It Works
 
-1. **Individual Table Tracking**: Each table's sync date is stored separately in the cache file
-2. **Automatic Fallback**: If no table-specific date exists, the global sync date is used
-3. **Backward Compatibility**: Existing installations continue to work without any changes
-4. **Debug Information**: When running with `-vvv` (debug mode), you'll see which sync date is being used for each table
+1. **Sync Start Timestamp**: The sync timestamp is captured when the sync process begins
+2. **Individual Table Tracking**: Each table's sync date is stored separately in the cache file
+3. **Atomic Updates**: Cache is only updated when the entire sync process completes successfully
+4. **Automatic Fallback**: If no table-specific date exists, the global sync date is used
+5. **Backward Compatibility**: Existing installations continue to work without any changes
+6. **Debug Information**: When running with `-vvv` (debug mode), you'll see which sync date is being used for each table
+7. **Error Recovery**: If sync fails, the cache remains unchanged with the previous sync dates
 
 ### Table Configuration
 
