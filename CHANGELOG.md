@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   **Batch file transfer optimization**: All tables are now transferred in a single file by default to minimize network overhead and improve sync performance
+-   New `--individual-transfers` command option to use legacy behavior (one file per table)
+-   Configuration option `file_transfer_mode` to control default transfer behavior (`batch` or `individual`)
+-   Environment variable `DATABASE_SYNC_FILE_TRANSFER_MODE` to configure transfer mode
+-   Automatic fallback to individual transfers when syncing single tables (`--table` option)
+-   Comprehensive documentation for batch transfer optimization
 -   **Per-table sync date tracking**: Each table now maintains its own last sync date to prevent data loss when syncing individual tables
 -   New `--status` option to view sync history for all tables
 -   `GetLastSyncDateForTableAction` for retrieving table-specific sync dates
@@ -23,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   **Breaking**: Default behavior now uses batch file transfers instead of individual transfers for improved performance
+-   Command description updated to reflect new batch transfer capabilities and options
 -   Sync process now uses table-specific dates when available, with automatic fallback to global dates
 -   Improved sync status information showing the date being used for each table
 -   Enhanced command description to mention the new `--status` option
@@ -31,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+-   **Performance**: Significantly reduced file transfer overhead by batching all tables into a single transfer operation
 -   Typo in sync message: "We will no start" → "We will now start"
 -   **Critical**: Fixed potential data loss issue where data created during sync could be missed due to timestamps being recorded at completion rather than start
 

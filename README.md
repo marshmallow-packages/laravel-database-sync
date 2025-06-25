@@ -68,6 +68,8 @@ To sync your remote database to local:
 php artisan db-sync
 ```
 
+By default, the package uses **batch file transfers** for optimal performance, transferring all table data in a single file to minimize network overhead.
+
 ### Advanced Options
 
 The sync command supports several options:
@@ -85,6 +87,7 @@ Available options:
 -   `--skip-landlord`: Skip landlord database in multi-tenant setup
 -   `--full-sync`: Sync the full table without a date constraint
 -   `--status`: View the sync history and status for all tables
+-   `--individual-transfers`: Use individual file transfers for each table (legacy behavior)
 
 ### Per-Table Sync Tracking
 
@@ -115,6 +118,40 @@ This will display a table showing each table name and its last sync date, helpin
 5. **Backward Compatibility**: Existing installations continue to work without any changes
 6. **Debug Information**: When running with `-vvv` (debug mode), you'll see which sync date is being used for each table
 7. **Error Recovery**: If sync fails, the cache remains unchanged with the previous sync dates
+
+### File Transfer Optimization
+
+The package uses **batch file transfers** by default to minimize network overhead:
+
+-   **Batch Mode (Default)**: All tables are dumped to a single file and transferred once
+-   **Individual Mode**: Each table is transferred separately (legacy behavior)
+
+#### Configuration
+
+Control the transfer mode in `config/database-sync.php`:
+
+```php
+'file_transfer_mode' => 'batch', // or 'individual'
+```
+
+Or via environment variable:
+
+```env
+DATABASE_SYNC_FILE_TRANSFER_MODE=batch
+```
+
+#### Benefits of Batch Transfer
+
+-   **Reduced network overhead**: Single file transfer instead of multiple
+-   **Faster sync times**: Especially noticeable with many tables
+-   **Better compression**: SSH compression works more efficiently on larger files
+-   **Lower resource usage**: Fewer process spawns and file operations
+
+#### When Individual Transfers Are Used
+
+-   Single table sync (`--table=tablename`)
+-   Explicit override (`--individual-transfers`)
+-   Config set to `individual` mode
 
 ### Table Configuration
 
