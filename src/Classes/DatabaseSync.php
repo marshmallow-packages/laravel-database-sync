@@ -17,6 +17,8 @@ use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpFullTableDataAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\CollectStamplessTablesAction;
 use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateValueToStorageAction;
 use Marshmallow\LaravelDatabaseSync\Actions\Mysql\DumpCreatedOrUpdatedDataAction;
+use Marshmallow\LaravelDatabaseSync\Actions\LogLastSyncDateForTableAction;
+use Marshmallow\LaravelDatabaseSync\Actions\GetLastSyncDateForTableWithFallbackAction;
 
 class DatabaseSync
 {
@@ -48,7 +50,7 @@ class DatabaseSync
         /** Start syncing the stampless tables, if they are provided in the config. */
         $stampless_tables = CollectStamplessTablesAction::handle($this->config, $this->command);
         if (count($stampless_tables)) {
-            $this->command->line(__("We will no start syncing all tables that dont have timestamp columns."));
+            $this->command->line(__("We will now start syncing all tables that dont have timestamp columns."));
             $stampless_tables->each(fn($table) => $this->syncFullTable($table));
         }
 
@@ -61,15 +63,25 @@ class DatabaseSync
 
     protected function syncTable(string $table)
     {
-        $deleted_at_available = HasDeletedAtColumn::handle($table, $this->config);
+        // Get table-specific sync date or fallback to global/default
+        $table_sync_date = GetLastSyncDateForTableWithFallbackAction::handle($table, $this->config, $this->command);
 
-        CountRecordsAction::handle($table, $deleted_at_available, $this->config, $this->command);
-        DumpCreatedOrUpdatedDataAction::handle($table, $this->config, $this->command);
-        DumpDeletedDataAction::handle($table, $deleted_at_available, $this->config, $this->command);
-        CopyRemoteFileToLocalAction::handle($this->config, $this->command);
-        ImportDataAction::handle($this->config, $this->command);
-        RemoveRemoteFileAction::handle($this->config);
-        RemoveLocalFileAction::handle($this->config);
+        // Create a temporary config with the table-specific date for this sync
+        $table_config = clone $this->config;
+        $table_config->date = $table_sync_date;
+
+        $deleted_at_available = HasDeletedAtColumn::handle($table, $table_config);
+
+        CountRecordsAction::handle($table, $deleted_at_available, $table_config, $this->command);
+        DumpCreatedOrUpdatedDataAction::handle($table, $table_config, $this->command);
+        DumpDeletedDataAction::handle($table, $deleted_at_available, $table_config, $this->command);
+        CopyRemoteFileToLocalAction::handle($table_config, $this->command);
+        ImportDataAction::handle($table_config, $this->command);
+        RemoveRemoteFileAction::handle($table_config);
+        RemoveLocalFileAction::handle($table_config);
+
+        // Log the sync date for this specific table
+        LogLastSyncDateForTableAction::handle($table, $this->config);
 
         if ($this->command->isDebug()) {
             $this->command->newLine();
@@ -87,6 +99,9 @@ class DatabaseSync
         ImportDataAction::handle($this->config, $this->command);
         RemoveRemoteFileAction::handle($this->config);
         RemoveLocalFileAction::handle($this->config);
+
+        // Log the sync date for this specific table
+        LogLastSyncDateForTableAction::handle($table, $this->config);
 
         if ($this->command->isDebug()) {
             $this->command->newLine();
