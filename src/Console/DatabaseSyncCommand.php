@@ -12,9 +12,9 @@ use Marshmallow\LaravelDatabaseSync\Actions\GetAllTableSyncDatesAction;
 
 class DatabaseSyncCommand extends Command
 {
-    protected $signature = 'db-sync {--date=} {--suite=} {--table=} {--tenant=} {--skip-landlord} {--full-sync} {--status}';
+    protected $signature = 'db-sync {--date=} {--suite=} {--table=} {--tenant=} {--skip-landlord} {--full-sync} {--status} {--individual-transfers : Transfer each table in a separate file (legacy behavior)}';
 
-    protected $description = 'Sync new and updated records from Laravel Forge to local. Use --status to view sync history per table.';
+    protected $description = 'Sync new and updated records from Laravel Forge to local. Use --status to view sync history per table. By default, all tables are transferred in a single file for efficiency.';
 
     public function handle()
     {

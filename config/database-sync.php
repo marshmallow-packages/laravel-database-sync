@@ -92,6 +92,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Sync Behavior Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure how the sync process handles file transfers:
+    | - 'batch': (default) Dump all tables to one file and transfer once
+    | - 'individual': Transfer each table separately (legacy behavior)
+    |
+    */
+
+    'file_transfer_mode' => env('DATABASE_SYNC_FILE_TRANSFER_MODE', 'batch'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Multi-Tenant Support
     |--------------------------------------------------------------------------
     |
