@@ -13,6 +13,7 @@ class RemoveLocalFileAction
         /**
          * Delete the local SQL dump file
          */
-        Process::run("rm -f {$config->local_temporary_file}");
+        $process = Process::timeout($config->process_timeout);
+        $process->run("rm -f {$config->local_temporary_file}");
     }
 }

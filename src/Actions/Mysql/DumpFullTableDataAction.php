@@ -26,6 +26,7 @@ class DumpFullTableDataAction
             ]));
         }
 
-        Process::run($exportCommand)->output();
+        $process = Process::timeout($config->process_timeout);
+        $process->run($exportCommand)->output();
     }
 }

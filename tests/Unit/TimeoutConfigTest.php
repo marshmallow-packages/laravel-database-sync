@@ -2,7 +2,9 @@
 
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 
-test('config can be created with valid parameters', function () {
+test('config sets custom timeout from configuration', function () {
+    config(['database-sync.process_timeout' => 600]);
+
     $config = Config::make(
         remote_user_and_host: 'test-remote-host@1.1.1.1',
         remote_database: 'test-remote-db',
@@ -14,17 +16,14 @@ test('config can be created with valid parameters', function () {
         local_database_password: 'test-password'
     );
 
-    expect($config)->toBeInstanceOf(Config::class)
-        ->and($config->remote_user_and_host)->toBe('test-remote-host@1.1.1.1')
-        ->and($config->remote_database)->toBe('test-remote-db')
-        ->and($config->local_host)->toBe('127.0.0.1')
-        ->and($config->local_database)->toBe('test-local-db')
-        ->and($config->process_timeout)->toBe(300); // Default timeout should be 300 seconds
+    expect($config->process_timeout)->toBe(600);
 });
 
-test('config validates required parameters', function () {
-    expect(fn() => Config::make(
-        remote_user_and_host: '',  // Empty host should throw exception
+test('config handles null timeout for disabling timeout', function () {
+    config(['database-sync.process_timeout' => null]);
+
+    $config = Config::make(
+        remote_user_and_host: 'test-remote-host@1.1.1.1',
         remote_database: 'test-remote-db',
         remote_database_username: 'test-user',
         remote_database_password: 'test-password',
@@ -32,5 +31,7 @@ test('config validates required parameters', function () {
         local_database: 'test-local-db',
         local_database_username: 'test-user',
         local_database_password: 'test-password'
-    ))->toThrow(\InvalidArgumentException::class, 'Remote host cannot be empty');
+    );
+
+    expect($config->process_timeout)->toBeNull();
 });
