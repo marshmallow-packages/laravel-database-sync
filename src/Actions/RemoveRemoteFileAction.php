@@ -13,6 +13,7 @@ class RemoveRemoteFileAction
         /**
          * Delete the remote SQL dump file
          */
-        Process::run("ssh {$config->remote_user_and_host} 'rm -f {$config->remote_temporary_file}'");
+        $process = Process::timeout($config->process_timeout);
+        $process->run("ssh {$config->remote_user_and_host} 'rm -f {$config->remote_temporary_file}'");
     }
 }

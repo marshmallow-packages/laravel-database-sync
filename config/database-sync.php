@@ -119,4 +119,17 @@ return [
     'mysql' => [
         'dump_action_flags' => '--skip-lock-tables --no-create-info --complete-insert --skip-triggers --replace',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Process Timeout Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Set the timeout (in seconds) for long-running database operations.
+    | Set to null to disable timeout entirely for very large databases.
+    | Default: 300 seconds (5 minutes)
+    |
+    */
+
+    'process_timeout' => env('DATABASE_SYNC_PROCESS_TIMEOUT', 300),
 ];

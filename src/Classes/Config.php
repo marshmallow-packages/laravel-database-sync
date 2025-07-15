@@ -18,6 +18,7 @@ class Config
     public string $cache_file_path;
     public string $cache_file_disk;
     public ?Carbon $sync_start_time = null;
+    public ?int $process_timeout;
 
     public static function make(...$arguments): static
     {
@@ -38,6 +39,7 @@ class Config
 
         $this->remote_temporary_file = config('database-sync.temporary_file_location.remote');
         $this->local_temporary_file = config('database-sync.temporary_file_location.local');
+        $this->process_timeout = config('database-sync.process_timeout');
 
         // MAKE VARIABLE
         $this->cache_file_path = 'marshmallow/database-sync/cache.json';

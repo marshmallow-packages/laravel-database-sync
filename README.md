@@ -13,6 +13,7 @@ A powerful Laravel package that enables seamless synchronization of data from a 
     -   [Advanced Options](#advanced-options)
     -   [Per-Table Sync Tracking](#per-table-sync-tracking)
     -   [Table Configuration](#table-configuration)
+    -   [Timeout Configuration](#timeout-configuration)
     -   [Synchronization Suites](#synchronization-suites)
     -   [Multi-Tenant Support](#multi-tenant-support)
 -   [Testing](#testing)
@@ -167,6 +168,30 @@ You can exclude specific tables from synchronization in the `config/database-syn
     ],
 ],
 ```
+
+### Timeout Configuration
+
+For large databases, you may need to adjust the process timeout to prevent operations from timing out:
+
+```php
+// Set timeout in seconds (default: 300 seconds / 5 minutes)
+'process_timeout' => 600, // 10 minutes
+
+// Or set to null to disable timeout entirely for very large databases
+'process_timeout' => null,
+```
+
+You can also set this via environment variable:
+
+```env
+DATABASE_SYNC_PROCESS_TIMEOUT=600
+```
+
+This timeout applies to:
+
+-   MySQL dump operations (`mysqldump`)
+-   MySQL import operations (`mysql`)
+-   File transfer operations (`scp`)
 
 ### Synchronization Suites
 
