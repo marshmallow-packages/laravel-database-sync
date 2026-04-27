@@ -11,7 +11,7 @@ class HasDeletedAtColumn
     {
         $query = "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '{$table}' AND column_name = 'deleted_at' AND table_schema = 'public'";
 
-        $psqlCommand = "PGPASSWORD='{$config->remote_database_password}' psql -h {$config->remote_user_and_host} -U {$config->remote_database_username} -d {$config->remote_database} -t -c \"{$query}\"";
+        $psqlCommand = "ssh {$config->remote_user_and_host} \"PGPASSWORD='{$config->remote_database_password}' psql -h {$config->remote_database_host} -U {$config->remote_database_username} -d {$config->remote_database} -t -c \\\"{$query}\\\"\"";
 
         $process = Process::timeout($config->process_timeout);
         $result = $process->run($psqlCommand);
