@@ -14,7 +14,7 @@ class DumpFullTableDataAction
         DatabaseSyncCommand $command,
     ): void {
         $dump_flags = config('database-sync.postgres.dump_action_flags');
-        $dumpCommand = "pg_dump -h localhost -U {$config->remote_database_username} {$dump_flags} -t {$table} {$config->remote_database}";
+        $dumpCommand = "pg_dump -h {$config->remote_database_host} -U {$config->remote_database_username} {$dump_flags} -t {$table} {$config->remote_database}";
 
         $exportCommand = "ssh {$config->remote_user_and_host} \"PGPASSWORD='{$config->remote_database_password}' " . $dumpCommand . " >> {$config->remote_temporary_file}\"";
 

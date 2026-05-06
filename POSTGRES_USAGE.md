@@ -38,6 +38,7 @@ Ensure your PostgreSQL connections are properly configured in your environment:
 
 ```bash
 # Remote PostgreSQL database
+DATABASE_SYNC_REMOTE_DATABASE_HOST=localhost
 DATABASE_SYNC_REMOTE_DATABASE_USERNAME=postgres
 DATABASE_SYNC_REMOTE_DATABASE_PASSWORD=your_password
 

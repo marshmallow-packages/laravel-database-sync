@@ -34,6 +34,7 @@ class Config
         public string $local_database,
         public string $local_database_username,
         public string $local_database_password,
+        public string $remote_database_host = 'localhost',
     ) {
         $this->validateParameters();
 
@@ -54,6 +55,10 @@ class Config
 
         if (empty($this->remote_database)) {
             throw new InvalidArgumentException(__('Remote database cannot be empty'));
+        }
+
+        if (empty($this->remote_database_host)) {
+            throw new InvalidArgumentException(__('Remote database host cannot be empty'));
         }
 
         if (empty($this->remote_database_username)) {

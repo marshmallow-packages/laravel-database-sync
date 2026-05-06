@@ -40,6 +40,7 @@ class DatabaseSyncCommand extends Command
             /** Remote host settings */
             remote_user_and_host: config('database-sync.remote_user_and_host'),
             remote_database: config('database-sync.remote_database'),
+            remote_database_host: config('database-sync.remote_database_host', 'localhost'),
             remote_database_username: config('database-sync.remote_database_username'),
             remote_database_password: config('database-sync.remote_database_password'),
 

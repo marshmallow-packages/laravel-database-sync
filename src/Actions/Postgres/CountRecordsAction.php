@@ -16,8 +16,8 @@ class CountRecordsAction
         $countCreatedOrUpdatedQuery = "SELECT COUNT(*) FROM {$table} WHERE (created_at >= '{$config->date}' OR updated_at >= '{$config->date}')";
         $countDeletedQuery = $deletedAtAvailable ? "SELECT COUNT(*) FROM {$table} WHERE deleted_at >= '{$config->date}'" : "SELECT 0";
 
-        $countCreatedOrUpdatedCommand = "PGPASSWORD='{$config->remote_database_password}' psql -h {$config->remote_user_and_host} -U {$config->remote_database_username} -d {$config->remote_database} -t -c \"{$countCreatedOrUpdatedQuery}\"";
-        $countDeletedCommand = "PGPASSWORD='{$config->remote_database_password}' psql -h {$config->remote_user_and_host} -U {$config->remote_database_username} -d {$config->remote_database} -t -c \"{$countDeletedQuery}\"";
+        $countCreatedOrUpdatedCommand = "ssh {$config->remote_user_and_host} \"PGPASSWORD='{$config->remote_database_password}' psql -h {$config->remote_database_host} -U {$config->remote_database_username} -d {$config->remote_database} -t -c \\\"{$countCreatedOrUpdatedQuery}\\\"\"";
+        $countDeletedCommand = "ssh {$config->remote_user_and_host} \"PGPASSWORD='{$config->remote_database_password}' psql -h {$config->remote_database_host} -U {$config->remote_database_username} -d {$config->remote_database} -t -c \\\"{$countDeletedQuery}\\\"\"";
 
         $process = Process::timeout($config->process_timeout);
         
