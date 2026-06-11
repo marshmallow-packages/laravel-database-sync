@@ -1,6 +1,12 @@
+![alt text](https://marshmallow.dev/cdn/media/logo-red-237x46.png "marshmallow.")
+
 # Laravel Database Sync
 
-A powerful Laravel package that enables seamless synchronization of data from a remote database to your local development environment.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/marshmallow/laravel-database-sync.svg?style=flat-square)](https://packagist.org/packages/marshmallow/laravel-database-sync)
+[![Tests](https://img.shields.io/github/actions/workflow/status/marshmallow-packages/laravel-database-sync/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/marshmallow-packages/laravel-database-sync/actions/workflows/tests.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/marshmallow/laravel-database-sync.svg?style=flat-square)](https://packagist.org/packages/marshmallow/laravel-database-sync)
+
+Sync your production database into your local database to start developing with production data. This package enables seamless synchronization of data from a remote database to your local development environment.
 
 ## Table of Contents
 
@@ -20,13 +26,15 @@ A powerful Laravel package that enables seamless synchronization of data from a 
     -   [Test Structure](#test-structure)
     -   [Writing Tests](#writing-tests)
 -   [Security](#security)
+-   [Changelog](#changelog)
 -   [Support](#support)
+-   [Credits](#credits)
 -   [License](#license)
 
 ## Requirements
 
 -   PHP ^8.2
--   Laravel ^10.0|^11.0|^12.0
+-   Laravel ^10.0|^11.0|^12.0|^13.0
 
 ## Installation
 
@@ -301,9 +309,18 @@ test('your test description', function () {
 -   Always use environment variables for sensitive information
 -   Ensure proper access controls on both remote and local databases
 
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
 ## Support
 
 For support, please email stef@marshmallow.dev
+
+## Credits
+
+-   [Stef](https://github.com/marshmallow-packages)
+-   [All Contributors](https://github.com/marshmallow-packages/laravel-database-sync/contributors)
 
 ## License
 
