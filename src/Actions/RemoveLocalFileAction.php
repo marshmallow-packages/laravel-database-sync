@@ -2,7 +2,6 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Actions;
 
-use Illuminate\Support\Facades\Process;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 
 class RemoveLocalFileAction
@@ -13,7 +12,7 @@ class RemoveLocalFileAction
         /**
          * Delete the local SQL dump file
          */
-        $process = Process::timeout($config->process_timeout);
+        $process = $config->newProcess();
         $process->run("rm -f {$config->local_temporary_file}");
     }
 }
