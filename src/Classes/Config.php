@@ -3,21 +3,28 @@
 namespace Marshmallow\LaravelDatabaseSync\Classes;
 
 use Carbon\Carbon;
+use Illuminate\Process\PendingProcess;
+use Illuminate\Support\Facades\Process;
 use InvalidArgumentException;
-use Symfony\Component\Console\Output\OutputInterface;
-use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
-use Marshmallow\LaravelDatabaseSync\Actions\GetLastSyncDateAction;
 
 class Config
 {
     public Carbon $date;
+
     public bool $debug = false;
+
     public ?string $multi_tenant_database_type = null;
+
     public string $remote_temporary_file;
+
     public string $local_temporary_file;
+
     public string $cache_file_path;
+
     public string $cache_file_disk;
+
     public ?Carbon $sync_start_time = null;
+
     public ?int $process_timeout;
 
     public static function make(...$arguments): static
@@ -71,6 +78,20 @@ class Config
         if (empty($this->local_database_username)) {
             throw new InvalidArgumentException(__('Local database username cannot be empty'));
         }
+    }
+
+    /**
+     * Build a PendingProcess with the configured timeout applied.
+     *
+     * A null process_timeout means "no timeout": Process::timeout() only
+     * accepts CarbonInterval|int and throws a TypeError on null, so we must
+     * use forever() to genuinely disable the limit for very large databases.
+     */
+    public function newProcess(): PendingProcess
+    {
+        return $this->process_timeout === null
+            ? Process::forever()
+            : Process::timeout($this->process_timeout);
     }
 
     public function isLandlordDatabase(): bool
