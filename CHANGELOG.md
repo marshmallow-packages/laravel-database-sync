@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+-   **Critical**: `process_timeout: null` now actually disables the timeout. Previously every process was created with `Process::timeout($config->process_timeout)`, and `PendingProcess::timeout()` only accepts `CarbonInterval|int` — passing `null` threw a `TypeError`, so the documented "set to null to disable" option was broken. Timeouts are now built via `Config::newProcess()`, which uses `Process::forever()` when `process_timeout` is `null`.
 -   **Performance**: Significantly reduced file transfer overhead by batching all tables into a single transfer operation
 -   Typo in sync message: "We will no start" → "We will now start"
 -   **Critical**: Fixed potential data loss issue where data created during sync could be missed due to timestamps being recorded at completion rather than start

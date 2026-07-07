@@ -2,7 +2,6 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Actions;
 
-use Illuminate\Support\Facades\Process;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 
 class RemoveRemoteFileAction
@@ -13,7 +12,7 @@ class RemoveRemoteFileAction
         /**
          * Delete the remote SQL dump file
          */
-        $process = Process::timeout($config->process_timeout);
+        $process = $config->newProcess();
         $process->run("ssh {$config->remote_user_and_host} 'rm -f {$config->remote_temporary_file}'");
     }
 }

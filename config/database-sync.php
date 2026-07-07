@@ -126,7 +126,9 @@ return [
     |--------------------------------------------------------------------------
     |
     | Set the timeout (in seconds) for long-running database operations.
-    | Set to null to disable timeout entirely for very large databases.
+    | Set to null to disable the timeout entirely for very large databases;
+    | the process is then run with Process::forever(). You can also disable it
+    | from the environment with DATABASE_SYNC_PROCESS_TIMEOUT=null.
     | Default: 300 seconds (5 minutes)
     |
     */
