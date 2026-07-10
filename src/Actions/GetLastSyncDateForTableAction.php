@@ -3,6 +3,7 @@
 namespace Marshmallow\LaravelDatabaseSync\Actions;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Arr;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 
@@ -11,7 +12,7 @@ class GetLastSyncDateForTableAction
     public static function handle(
         string $table,
         Config $config,
-    ): ?Carbon {
+    ): ?CarbonInterface {
         $cache = GetCacheFromStorageAction::handle($config);
 
         if (!$cache) {

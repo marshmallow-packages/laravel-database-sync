@@ -2,14 +2,14 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Classes;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Process\PendingProcess;
 use Illuminate\Support\Facades\Process;
 use InvalidArgumentException;
 
 class Config
 {
-    public Carbon $date;
+    public CarbonInterface $date;
 
     public bool $debug = false;
 
@@ -23,7 +23,7 @@ class Config
 
     public string $cache_file_disk;
 
-    public ?Carbon $sync_start_time = null;
+    public ?CarbonInterface $sync_start_time = null;
 
     public ?int $process_timeout;
 
