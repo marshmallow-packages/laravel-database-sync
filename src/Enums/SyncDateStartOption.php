@@ -2,7 +2,7 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Enums;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 
 enum SyncDateStartOption: string
 {
@@ -17,7 +17,7 @@ enum SyncDateStartOption: string
         };
     }
 
-    public function getDate(): Carbon
+    public function getDate(): CarbonInterface
     {
         return match ($this) {
             self::START_OF_DAY => now()->startOfDay(),
