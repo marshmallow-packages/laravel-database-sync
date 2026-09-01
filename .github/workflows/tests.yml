@@ -2,12 +2,15 @@ name: run-tests
 
 on:
     push:
+        branches:
+            - main
         paths:
             - "**.php"
             - ".github/workflows/tests.yml"
             - "phpunit.xml.dist"
             - "composer.json"
             - "composer.lock"
+    workflow_dispatch:
 
 jobs:
     test:
