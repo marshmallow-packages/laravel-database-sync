@@ -2,7 +2,6 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Actions\Mysql;
 
-use Illuminate\Support\Facades\Process;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
 
@@ -26,7 +25,7 @@ class DumpCreatedOrUpdatedDataAction
             ]));
         }
 
-        $process = Process::timeout($config->process_timeout);
+        $process = $config->newProcess();
         $process->run($exportCommand)->output();
     }
 }

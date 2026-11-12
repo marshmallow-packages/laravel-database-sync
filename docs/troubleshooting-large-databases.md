@@ -23,8 +23,16 @@ Configure the `process_timeout` setting in your `config/database-sync.php` file:
 Or set via environment variable:
 
 ```env
+# Raise the limit to 10 minutes
 DATABASE_SYNC_PROCESS_TIMEOUT=600
+
+# Or disable the timeout entirely for very large databases
+DATABASE_SYNC_PROCESS_TIMEOUT=null
 ```
+
+> **Note:** `null` genuinely removes the limit — the underlying process is run
+> with `Process::forever()`. (Prior to this fix, `null` raised a `TypeError`
+> because `Process::timeout()` only accepts `CarbonInterval|int`.)
 
 ### Affected Operations
 

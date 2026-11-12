@@ -2,7 +2,6 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Actions;
 
-use Illuminate\Support\Facades\Process;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
 
@@ -20,7 +19,7 @@ class CopyRemoteFileToLocalAction
         }
         $copyCommand = "scp {$config->remote_user_and_host}:{$config->remote_temporary_file} {$config->local_temporary_file}";
 
-        $process = Process::timeout($config->process_timeout);
+        $process = $config->newProcess();
         $result = $process->run($copyCommand);
 
         if ($result->failed()) {

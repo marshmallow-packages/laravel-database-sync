@@ -3,6 +3,7 @@
 namespace Marshmallow\LaravelDatabaseSync\Actions;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 use Marshmallow\LaravelDatabaseSync\Enums\SyncDateStartOption;
 use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
@@ -13,7 +14,7 @@ class GetLastSyncDateForTableWithFallbackAction
         string $table,
         Config $config,
         DatabaseSyncCommand $command,
-    ): Carbon {
+    ): CarbonInterface {
         // If date option is provided via command line, use it
         if ($command->option('date')) {
             return Carbon::parse($command->option('date'));

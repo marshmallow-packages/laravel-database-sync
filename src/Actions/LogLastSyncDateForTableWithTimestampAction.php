@@ -2,7 +2,7 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Actions;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
@@ -12,7 +12,7 @@ class LogLastSyncDateForTableWithTimestampAction
     public static function handle(
         string $table,
         Config $config,
-        Carbon $timestamp,
+        CarbonInterface $timestamp,
     ): void {
         $cache = GetCacheFromStorageAction::handle($config, default: [
             $config->remote_database => [],

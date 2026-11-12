@@ -2,7 +2,6 @@
 
 namespace Marshmallow\LaravelDatabaseSync\Actions\Mysql;
 
-use Illuminate\Support\Facades\Process;
 use Marshmallow\LaravelDatabaseSync\Classes\Config;
 use Marshmallow\LaravelDatabaseSync\Console\DatabaseSyncCommand;
 
@@ -19,7 +18,7 @@ class ImportDataAction
 
         $importCommand = "mysql -h {$config->local_host} -u {$config->local_database_username} -p'{$config->local_database_password}' {$config->local_database} < {$config->local_temporary_file}";
 
-        $process = Process::timeout($config->process_timeout);
+        $process = $config->newProcess();
         $result = $process->run($importCommand);
 
         if ($result->failed()) {
